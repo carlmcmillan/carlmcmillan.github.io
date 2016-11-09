@@ -3,12 +3,23 @@ var heart = {
   _interval: null,
 
   run: function() {
+    var minRed = 50;
+    var maxRed = 255;
+    var red = minRed;
+
+    var body = document.querySelector("body");
+    body.addEventListener("mousemove", function() {
+      if (red < maxRed) {
+        red++;
+        colourHeart();
+      }
+    });
+
     var canvas = document.querySelector('#canvasHeart');
     var ctx = canvas.getContext('2d');
-    ctx.fillStyle = "#ffffff";
     ctx.lineWidth = 6.0;
     ctx.shadowBlur = 10.0;
-    ctx.shadowColor = "#ffffff";
+    colourHeart();
 
     var i = 0;
 
@@ -16,6 +27,12 @@ var heart = {
     var y = 300;
 
     var grow = true;
+
+    function colourHeart() {
+      heartColour = "rgb(" + red + ", 0, 0)";
+      ctx.shadowColor = heartColour;
+      ctx.fillStyle = heartColour;
+    }
 
     function draw() {
       if (grow) {
@@ -37,6 +54,11 @@ var heart = {
       ctx.bezierCurveTo(x+size*0.2, y-size, x, y-size*0.76, x, y-size*0.7);
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.fill();
+
+      if (red > minRed) {
+        red--;
+        colourHeart();
+      }
     }
 
     this._interval = setInterval(draw, 60);
