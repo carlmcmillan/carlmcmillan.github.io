@@ -1,5 +1,5 @@
 body {
-  background: #3a3a38;
+  background: #ffffff;
   font-family: 'Source Sans Pro', sans-serif;
   margin: 0;
 }
@@ -8,7 +8,16 @@ body {
   width: 100%;
 }
 
-#heartPage {
+.show {
+  display: block;
+}
+
+.hide {
+  display: none;
+}
+
+#textCanvas {
+  margin: 0 auto;
   display: block;
 }
 
@@ -17,16 +26,13 @@ body {
   display: block;
 }
 
-#chartPage {
-  display: none;
+#dinoCanvas {
+  margin: 0 auto;
+  display: block;
 }
 
 #chartControl {
   text-align: center;
-}
-
-#mapPage {
-  display: none;
 }
 
 #canvas {

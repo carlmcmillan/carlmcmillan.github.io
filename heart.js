@@ -18,7 +18,7 @@ var heart = {
     var canvas = document.querySelector('#canvasHeart');
     var ctx = canvas.getContext('2d');
     ctx.lineWidth = 6.0;
-    ctx.shadowBlur = 10.0;
+    ctx.shadowBlur = 12.0;
     colourHeart();
 
     var i = 0;

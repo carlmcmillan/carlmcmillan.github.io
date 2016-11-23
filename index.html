@@ -10,16 +10,22 @@
 <body>
 
 <div id="mainHeader">
+	<button id="textButton">Text</button>
 	<button id="heartButton">Heart</button>
 	<button id="chartButton">Chart</button>
+	<button id="dinoButton">Dino</button>
 	<button id="mapButton">Map</button>
 </div>
 
-<div id="heartPage" class="container">
+<div id="textPage" class="container show">
+	<canvas id="textCanvas" width="756" height="600"></canvas>
+</div>
+
+<div id="heartPage" class="container hide">
 	<canvas id="canvasHeart" width="756" height="600"></canvas>
 </div>
 
-<div id="chartPage" class="container">
+<div id="chartPage" class="container hide">
 	<div id=chartControl>
 		<label for="amplitude">Amplitude</label>
 		<input id="amplitude" type="range" min="1" max="300" step="1">
@@ -29,11 +35,17 @@
 	<canvas id="canvas" width="756" height="600"></canvas>
 </div>
 
-<div id="mapPage" class="container">
+<div id="dinoPage" class="container hide">
+	<canvas id="dinoCanvas" width="756" height="600"></canvas>
+</div>
+
+<div id="mapPage" class="container hide">
 	<div id="map"></div>
 </div>
 
+<script type="text/javascript" src="text.js"></script>
 <script type="text/javascript" src="heart.js"></script>
+<script type="text/javascript" src="dino.js"></script>
 <script type="text/javascript" src="chart.js"></script>
 <script type="text/javascript" src="https://unpkg.com/leaflet@1.0.1/dist/leaflet.js"></script>
 <script type="text/javascript" src="map.js"></script>

@@ -1,37 +1,38 @@
-var heartPage = document.querySelector("#heartPage");
-var heartButton = document.querySelector("#heartButton");
+var pageObjects = {
+  text: text, 
+  heart: heart, 
+  chart: chart, 
+  dino: dino, 
+  map: map
+};
 
-var chartPage = document.querySelector("#chartPage");
-var chartButton = document.querySelector("#chartButton");
+pageObjects["text"].run();
 
-var mapPage = document.querySelector("#mapPage");
-var mapButton = document.querySelector("#mapButton");
+for (let name in pageObjects) {
 
-heart.run();
+  let obj = pageObjects[name];
 
-heartButton.addEventListener("click", function() {
-  hideAll();
-  heartPage.style.display = "block";
-  heart.run();
-});
+  let page = document.querySelector("#" + name + "Page");
+  let button = document.querySelector("#" + name + "Button");
 
-chartButton.addEventListener("click", function() {
-  hideAll();
-  chartPage.style.display = "block";
-  chart.run();
-});
-
-mapButton.addEventListener("click", function() {
-  hideAll();
-  mapPage.style.display = "block";
-  map.create();
-});
+  button.addEventListener("click", function() {
+    hideAll();
+    page.classList.remove("hide");
+    page.classList.add("show");
+    obj.run();
+  });
+}
 
 function hideAll() {
-  heartPage.style.display = "none";
-  heart.stop();
-  chartPage.style.display = "none";
-  chart.stop();
-  mapPage.style.display = "none";
-  map.destroy();
+  for (let name in pageObjects) {
+
+    let obj = pageObjects[name];
+
+    let page = document.querySelector("#" + name + "Page");
+
+    page.classList.remove("show");
+    page.classList.add("hide");
+    obj.stop();
+  };
+
 }
