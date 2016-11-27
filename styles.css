@@ -38,7 +38,7 @@ body {
 #canvas {
   margin: 0 auto;
   border: 1px solid black;
-  background: url("osc_28.gif");
+  background: url("assets/osc_28.gif");
   background-size: cover;
   display: block;
 }
