@@ -4,6 +4,7 @@ var dino = {
   _renderer: null,
   _camera: null,
   _scene: null,
+  _frameId: null,
 
   run: function() {
     this._renderer = new THREE.WebGLRenderer({antialias:true});
@@ -45,8 +46,9 @@ var dino = {
       scene.add(object);
     }, onProgress, onError);
 
+    var that = this;
     function animate() {
-      requestAnimationFrame(animate);
+      that._frameId = requestAnimationFrame(animate);
       render();
     }
 
@@ -63,6 +65,7 @@ var dino = {
       this._renderer = null;
       this._scene = null;
       this._camera = null;
+      cancelAnimationFrame(this._frameId);
       empty(this._container);
     }
 
