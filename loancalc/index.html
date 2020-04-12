@@ -94,19 +94,23 @@
             term.value = this.value;
             updatePayment();
         });
+        
+        var cumulativePaymentChart = createLines('Cumulative Payments', 'Cumulative Interest', 'cumulativePaymentChart');
+        var paymentChart = createLines('Monthly Payments', 'Monthly Interest', 'paymentChart');
+        var loanChart = createLine('Loan Total', 'amountChart');
 
         var payment = document.getElementById('payment');
-        payment.value = calcPayment(amount.value - deposit.value, interest.value, term.value);
+        payment.value = calcPayment(loanChart, amount.value - deposit.value, interest.value, term.value);
 
         function updatePayment() {
-            payment.value = calcPayment(amount.value - deposit.value, interest.value, term.value);
+            payment.value = calcPayment(loanChart, amount.value - deposit.value, interest.value, term.value);
         }
 
         function discountFactor(monthlyInterest, numPayments) {
             return (Math.pow(1 + monthlyInterest, numPayments) - 1) / (monthlyInterest * Math.pow(1 + monthlyInterest, numPayments));
         }
 
-        function calcPayment(amount, interest, term) {
+        function calcPayment(loanChart, amount, interest, term) {
             var amountF = parseFloat(amount);
             var interestF = parseFloat(interest);
             var termF = parseFloat(term);
@@ -139,90 +143,103 @@
                 currentAmount = currentAmount + currentAmount * monthlyInterest - p;
             }
 
-            drawLines('Cumulative Payments', 'Cumulative Interest', 'cumulativePaymentChart', monthlyCumulativePayments, monthlyCumulativeInterestAmounts, termMonths);
-            drawLines('Monthly Payments', 'Monthly Interest', 'paymentChart', monthlyPayments, monthlyInterestAmounts, termMonths);
-            drawLine('Loan Total', 'amountChart', monthlyCurrentAmounts, termMonths);
+            drawLines(cumulativePaymentChart, monthlyCumulativePayments, monthlyCumulativeInterestAmounts, termMonths);
+            drawLines(paymentChart, monthlyPayments, monthlyInterestAmounts, termMonths);
+            drawLine(loanChart, monthlyCurrentAmounts, termMonths);
 
             return parseFloat(monthlyPayment).toFixed(0);
         }
 
-        function drawLine(chartName, canvasName, data, labels) {
-            var ctx = document.getElementById(canvasName).getContext('2d');
-            var myChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: chartName,
-                        data: data,
-                        backgroundColor: [
-                            'rgba(255, 99, 132, 0)'
-                        ],
-                        borderColor: [
-                            'rgba(255, 99, 132, 1)'
-                        ]
-                    }]
-                },
-                options: {
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                beginAtZero: true
-                            }
-                        }]
-                    },
-                    elements: {
-                        point:{
-                            radius: 0
-                        }
-                    }
-                }
-            });
+        function drawLine(chart, data, labels) {
+            chart.data.labels = labels;
+            chart.data.datasets[0].data = data;
+            chart.update();
         }
 
-        function drawLines(data1Name, data2Name, canvasName, data1, data2, labels) {
-            var ctx = document.getElementById(canvasName).getContext('2d');
-            new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: data1Name,
-                        data: data1,
-                        backgroundColor: [
-                            'rgba(255, 99, 132, 0)'
-                        ],
-                        borderColor: [
-                            'rgba(255, 99, 132, 1)'
-                        ]
-                    },
-                    {
-                        label: data2Name,
-                        data: data2,
-                        backgroundColor: [
-                            'rgba(132, 99, 255, 0)'
-                        ],
-                        borderColor: [
-                            'rgba(132, 99, 255, 1)'
-                        ]
-                    }]
-                },
-                options: {
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                beginAtZero: true
-                            }
-                        }]
-                    },
-                    elements: {
-                        point:{
-                            radius: 0
-                        }
-                    }
-                }
-            });
+        function drawLines(chart, data1, data2, labels) {
+            chart.data.labels = labels;
+            chart.data.datasets[0].data = data1;
+            chart.data.datasets[1].data = data2;
+            chart.update();
         }
+          
+        function createLine(chartName, canvasName) {
+          var ctx = document.getElementById(canvasName).getContext('2d');
+          return new Chart(ctx, {
+              type: 'line',
+              data: {
+                  labels: [],
+                  datasets: [{
+                      label: chartName,
+                      data: [],
+                      backgroundColor: [
+                          'rgba(255, 99, 132, 0)'
+                      ],
+                      borderColor: [
+                          'rgba(255, 99, 132, 1)'
+                      ]
+                  }]
+              },
+              options: {
+                  scales: {
+                      yAxes: [{
+                          ticks: {
+                              beginAtZero: true
+                          }
+                      }]
+                  },
+                  elements: {
+                      point:{
+                          radius: 0
+                      }
+                  }
+              }
+          });
+      }
+
+      function createLines(data1Name, data2Name, canvasName) {
+          var ctx = document.getElementById(canvasName).getContext('2d');
+          return new Chart(ctx, {
+              type: 'line',
+              data: {
+                  labels: [],
+                  datasets: [{
+                      label: data1Name,
+                      data: [],
+                      backgroundColor: [
+                          'rgba(255, 99, 132, 0)'
+                      ],
+                      borderColor: [
+                          'rgba(255, 99, 132, 1)'
+                      ]
+                  },
+                  {
+                      label: data2Name,
+                      data: [],
+                      backgroundColor: [
+                          'rgba(132, 99, 255, 0)'
+                      ],
+                      borderColor: [
+                          'rgba(132, 99, 255, 1)'
+                      ]
+                  }]
+              },
+              options: {
+                  scales: {
+                      yAxes: [{
+                          ticks: {
+                              beginAtZero: true
+                          }
+                      }]
+                  },
+                  elements: {
+                      point:{
+                          radius: 0
+                      }
+                  }
+              }
+          });
+      }
     </script>
 </body>
 </html>
