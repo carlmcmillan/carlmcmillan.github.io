@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+    <link rel="stylesheet" href="https://unpkg.com/picnic">
+    <style>
+        h1 { padding: 10px 10px; }
+        div.inline { float:left; }
+        .clearBoth { clear:both; }
+        #controls div { padding: 0px 10px; }
+        #payments div { padding: 0px 10px; }
+    </style>
+</head>
+<body>
+    <h1>Loan Calculator</h1>
+    <div id="controls">
+        <div id="amountDiv" class="inline" style="width:33%">
+            <label for="amount">Amount</label>
+            <input id="amount" type="number" size="30">
+            <input id="amountControl" type="range" min="0" max="1200000" step="1000" value="1000000">
+        </div>
+        <div id="interestDiv" class="inline" style="width:33%">
+            <label for="interest">Interest</label>
+            <input id="interest" type="number" size="30">
+            <input id="interestControl" type="range" min="0" max="0.12" step="0.005" value="0.04">
+        </div>
+        <div id="termDiv" class="inline" style="width:33%">
+            <label for="term">Term</label>
+            <input id="term" type="number" size="30">
+            <input id="termControl" type="range" min="0" max="30" step="5" value="30">
+        </div>
+    </div>
+    <div id="payments">
+        <div id="depositDiv" class="inline" style="width:50%">
+            <label for="deposit">Deposit 20%</label>
+            <input id="deposit" type="number" size="30" readonly>
+        </div>
+        <div id="paymentDiv" class="inline" style="width:50%">
+            <label for="payment">Monthly Payment</label>
+            <input id="payment" type="number" size="30" readonly>
+        </div>
+    </div>
+    <br><br>
+
+    <div class="inline" style="width:33%">
+        <canvas id="paymentChart" width="400" height="400"></canvas>
+    </div>
+    <div class="inline" style="width:33%">
+        <canvas id="cumulativePaymentChart" width="400" height="400"></canvas>
+    </div>
+    <div class="inline" style="width:33%">
+        <canvas id="amountChart" width="400" height="400"></canvas>
+    </div>
+    <br class="clearBoth" />
+
+    <script type="text/javascript">
+
+        var amount = document.getElementById('amount');
+        var amountControl = document.getElementById("amountControl");
+        amount.value = amountControl.value;
+        var deposit = document.getElementById('deposit');
+        deposit.value = parseFloat(amount.value * .2).toFixed(0);
+        amount.addEventListener('input', function() {
+            amountControl.value = this.value;
+            deposit.value = parseFloat(this.value * .2).toFixed(0);
+            updatePayment();
+        });
+        amountControl.addEventListener("input", function() {
+            amount.value = this.value;
+            deposit.value = parseFloat(amount.value * .2).toFixed(0);
+            updatePayment();
+        });
+        
+        var interest = document.getElementById('interest');
+        var interestControl = document.getElementById("interestControl");
+        interest.value = interestControl.value;
+        interest.addEventListener('input', function() {
+            interestControl.value = this.value;
+            updatePayment();
+        });
+        interestControl.addEventListener("input", function() {
+            interest.value = this.value;
+            updatePayment();
+        });
+
+        var term = document.getElementById('term');
+        var termControl = document.getElementById("termControl");
+        term.value = termControl.value;
+        term.addEventListener('input', function() {
+            termControl.value = this.value;
+            updatePayment();
+        });
+        termControl.addEventListener("input", function() {
+            term.value = this.value;
+            updatePayment();
+        });
+
+        var payment = document.getElementById('payment');
+        payment.value = calcPayment(amount.value - deposit.value, interest.value, term.value);
+
+        function updatePayment() {
+            payment.value = calcPayment(amount.value - deposit.value, interest.value, term.value);
+        }
+
+        function discountFactor(monthlyInterest, numPayments) {
+            return (Math.pow(1 + monthlyInterest, numPayments) - 1) / (monthlyInterest * Math.pow(1 + monthlyInterest, numPayments));
+        }
+
+        function calcPayment(amount, interest, term) {
+            var amountF = parseFloat(amount);
+            var interestF = parseFloat(interest);
+            var termF = parseFloat(term);
+            var numPayments = termF * 12.0;
+            var monthlyInterest = interestF / 12.0;
+            var d = discountFactor(monthlyInterest, numPayments);
+            var monthlyPayment = amountF / d;
+
+            var currentAmount = amountF;
+            var monthlyPayments = [];
+            var monthlyCurrentAmounts = [];
+            var monthlyCumulativePayments = [];
+            var monthlyInterestAmounts = [];
+            var monthlyCumulativeInterestAmounts = [];
+            var termMonths = [];
+            for (var i = 0; i < numPayments; i++) {
+                var d = discountFactor(monthlyInterest, numPayments - i);
+                var p = currentAmount / d;
+                monthlyPayments.push(p);
+                monthlyCurrentAmounts.push(currentAmount);
+                monthlyInterestAmounts.push(currentAmount * monthlyInterest);
+                termMonths.push(i);
+                if (i == 0) {
+                    monthlyCumulativePayments.push(p);
+                    monthlyCumulativeInterestAmounts.push(currentAmount * monthlyInterest)
+                } else {
+                    monthlyCumulativePayments.push(p + monthlyCumulativePayments[i - 1]);
+                    monthlyCumulativeInterestAmounts.push(currentAmount * monthlyInterest + monthlyCumulativeInterestAmounts[i - 1]);
+                }
+                currentAmount = currentAmount + currentAmount * monthlyInterest - p;
+            }
+
+            drawLines('Cumulative Payments', 'Cumulative Interest', 'cumulativePaymentChart', monthlyCumulativePayments, monthlyCumulativeInterestAmounts, termMonths);
+            drawLines('Monthly Payments', 'Monthly Interest', 'paymentChart', monthlyPayments, monthlyInterestAmounts, termMonths);
+            drawLine('Loan Total', 'amountChart', monthlyCurrentAmounts, termMonths);
+
+            return parseFloat(monthlyPayment).toFixed(0);
+        }
+
+        function drawLine(chartName, canvasName, data, labels) {
+            var ctx = document.getElementById(canvasName).getContext('2d');
+            var myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: chartName,
+                        data: data,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)'
+                        ]
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    },
+                    elements: {
+                        point:{
+                            radius: 0
+                        }
+                    }
+                }
+            });
+        }
+
+        function drawLines(data1Name, data2Name, canvasName, data1, data2, labels) {
+            var ctx = document.getElementById(canvasName).getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: data1Name,
+                        data: data1,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)'
+                        ]
+                    },
+                    {
+                        label: data2Name,
+                        data: data2,
+                        backgroundColor: [
+                            'rgba(132, 99, 255, 0)'
+                        ],
+                        borderColor: [
+                            'rgba(132, 99, 255, 1)'
+                        ]
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    },
+                    elements: {
+                        point:{
+                            radius: 0
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
