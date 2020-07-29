@@ -4,11 +4,17 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
     <link rel="stylesheet" href="https://unpkg.com/picnic">
     <style>
-        h1 { padding: 10px 10px; }
-        div.inline { float:left; }
-        .clearBoth { clear:both; }
-        #controls div { padding: 0px 10px; }
-        #payments div { padding: 0px 10px; }
+      body { 
+        color: rgb(244, 244, 244);
+        background-image: url("city-buildings-near-body-of-water-1449455.jpg");
+        background-size: cover;
+      }
+      h1 { padding: 10px 10px; }
+      input { color: black; }
+      div.inline { float:left; }
+      .clearBoth { clear:both; }
+      #controls div { padding: 0px 10px; }
+      #payments div { padding: 0px 10px; }
     </style>
 </head>
 <body>
@@ -54,6 +60,8 @@
     <br class="clearBoth" />
 
     <script type="text/javascript">
+      
+        Chart.defaults.global.defaultFontColor = 'rgb(244, 244, 244)';
 
         var amount = document.getElementById('amount');
         var amountControl = document.getElementById("amountControl");
@@ -173,10 +181,10 @@
                       label: chartName,
                       data: [],
                       backgroundColor: [
-                          'rgba(255, 99, 132, 0)'
+                          'rgba(255, 255, 0, 0.2)'
                       ],
                       borderColor: [
-                          'rgba(255, 99, 132, 1)'
+                          'rgba(255, 255, 0, 1)'
                       ]
                   }]
               },
@@ -207,21 +215,23 @@
                       label: data1Name,
                       data: [],
                       backgroundColor: [
-                          'rgba(255, 99, 132, 0)'
+                          'rgba(255, 255, 0, 0.2)'
                       ],
                       borderColor: [
-                          'rgba(255, 99, 132, 1)'
-                      ]
+                          'rgba(255, 255, 0, 1)'
+                      ],
+                      order: 1
                   },
                   {
                       label: data2Name,
                       data: [],
                       backgroundColor: [
-                          'rgba(132, 99, 255, 0)'
+                          'rgba(255, 51, 51, 0)'
                       ],
                       borderColor: [
-                          'rgba(132, 99, 255, 1)'
-                      ]
+                          'rgba(255, 51, 51, 1)'
+                      ],
+                      order: 2
                   }]
               },
               options: {
