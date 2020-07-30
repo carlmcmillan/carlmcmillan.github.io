@@ -3,68 +3,78 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Carl McMillan</title>
-	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700">
-	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.1/dist/leaflet.css">
 	<link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-<!--
-<div id="mainHeader">
-    <button id="resumeButton">Resume</button>
-	<button id="textButton">Text</button>
-	<button id="heartButton">Heart</button>
-	<button id="chartButton">Chart</button>
-	<button id="dinoButton">Dino</button>
-	<button id="mapButton">Map</button>
-</div>
--->
+<div class="row">
+	<div class="column1">
+		<h1>Carl McMillan</h1>
 
-<div id="resumePage" class="container show">
-	<span id="resume"></span>
-</div>
-  
-<div id="textPage" class="container hide">
-	<canvas id="textCanvas" width="756" height="600"></canvas>
-</div>
-
-<div id="heartPage" class="container hide">
-	<canvas id="canvasHeart" width="756" height="600"></canvas>
-</div>
-
-<div id="chartPage" class="container hide">
-	<div id=chartControl>
-		<label for="amplitude">Amplitude</label>
-		<input id="amplitude" type="range" min="1" max="300" step="1">
-		<label for="frequency">Frequency</label>
-		<input id="frequency" type="range" min="1" max="700" step="1">
+		<h2>Objective</h2>
+		<hr>
+		<p>I am a software developer, driven by solving problems in simple and efficient ways. I like to get involved and understand every part of the process and use that experience to help others achieve what they need. I like to work in small efficient teams and believe in taking responsibility of what you build and owning the whole process from development to delivery to support.</p>
+		<h2>Programming Languages</h2>
+		<hr>
+		<p>Java, Python, Groovy, Ruby/Chef.</p>
+		<br/>
+		<h2>Tools/Platforms</h2>
+		<hr>
+		<p>Intellij, Visual Studio Code, JMeter, Jenkins, Linux, Windows, Git, Gradle, Maven, Helm, Docker</p>
+		<br/>
+		<h2>Contact</h2>
+		<hr>
+		<div class="contact">Website: <a href="http://carlmcmillan.nz">http://carlmcmillan.nz</a></div>
+		<div class="contact">Email: carlmcmillan1@gmail.com</div>
+		<div class="contact">Wellington, New Zealand</div>
+		<br/>
 	</div>
-	<canvas id="canvas" width="756" height="600"></canvas>
+	<div class="column2">
+		<h2>Technical Experience</h2>
+		<hr>
+		<h3><div class="header-left">Technical Consultant at Westpac</div>&nbsp;<div class="header-right">June 2017 - Now</div></h3>
+		<ul>
+			<li>Building java microservices in Kubernetes using Kafka for distributed messaging, used for integration between proprietary bank card processing software, other products running on older platforms and communications to customers.</li>
+			<li>Development using encryption for secure storage of data in database's and Kafka topic's for PCI DSS compliance for financial transactions.</li>
+			<li>Automation of building servers and installation of proprietary bank card processing software using Chef and Jenkins.</li>
+			<li>Monitoring and alerting of the mentioned systems using Elasticstack, Grafana, PagerDuty.</li>
+			<li>On call production support for the above systems.</li>
+		</ul>
+		<h3><div class="header-left">Software Developer at Datacom</div>&nbsp;<div class="header-right">June 2011 – June 2017</div></h3>
+		<ul>
+			<li>Developing web data visualisation software for tracking availability of Chorus resources.</li>
+			<li>Part of development team for integration components of ordering system for Chorus fibre.</li>
+			<li>Integration development for AMS for remote operations on smart meters.</li>
+			<li>On call production support for existing apps in our team.</li>
+			<li>Improvements to our teams development processes, e.g. automation of processes, chat ops.</li>
+		</ul>
+		<h3><div class="header-left">Software Developer at Wialus</div>&nbsp;<div class="header-right">Nov 2009 - Feb 2010</div></h3>
+		<ul>
+			<li>Summer of Code internship.</li>
+			<li>Created C++ programs for ETL processes for mobile phone signal data.</li>
+			<li>Created C++ program for calculating elevations along any great circle path.</li>
+		</ul>
+		<h3><div class="header-left">Biosecurity Officer at GWRC</div>&nbsp;<div class="header-right">Jul 2006 - Nov 2007</div></h3>
+		<ul>
+			<li>Control pest animals in the Wellington region, and help people with pest animal problems.</li>
+			<li>Set up poison and trapping programs for volunteers to take over.</li>
+			<li>Mapping with GPS devices and ArcGIS software.</li>
+			<li>Looking after database and generated reports for a large conservation project in Wainui water catchment.</li>
+			<li>Conducted trials for possum control methods.</li>
+		</ul>
+		<br/>
+		<h2>Education</h2>
+		<hr>
+		<h3><div class="header-left">Victoria University</div>&nbsp;<div class="header-right">Completed June 2011</div></h3>
+		<ul>
+			<li>Conjoint BSc/BCA in Computer Science/Mathematics/Money & Finance</li>
+		</ul>
+		<h3><div class="header-left">Victoria University</div>&nbsp;<div class="header-right">Completed November 2003</div></h3>
+		<ul>
+			<li>BSc in Ecology & Biodiversity/MarineBiology</li>
+		</ul>
+	</div>
 </div>
-
-<div id="dinoPage" class="container hide">
-	<div id="dino"></div>
-</div>
-
-<div id="mapPage" class="container hide">
-	<div id="map"></div>
-</div>
-
-<script type="text/javascript" src="https://unpkg.com/showdown/dist/showdown.min.js"></script>
-<script type="text/javascript" src="js/resume.js"></script>
-<script type="text/javascript" src="js/text.js"></script>
-<script type="text/javascript" src="js/heart.js"></script>
-<script type="text/javascript" src="js/threejs/three.min.js"></script>
-<script type="text/javascript" src="js/threejs/loaders/DDSLoader.js"></script>
-<script type="text/javascript" src="js/threejs/loaders/MTLLoader.js"></script>
-<script type="text/javascript" src="js/threejs/loaders/OBJMTLLoader.js"></script>
-<script type="text/javascript" src="js/threejs/Detector.js"></script>
-<script type="text/javascript" src="js/threejs/libs/stats.min.js"></script>
-<script type="text/javascript" src="js/dino.js"></script>
-<script type="text/javascript" src="js/chart.js"></script>
-<script type="text/javascript" src="https://unpkg.com/leaflet@1.0.1/dist/leaflet.js"></script>
-<script type="text/javascript" src="js/map.js"></script>
-<script type="text/javascript" src="js/main.js"></script>
 
 </body>
 </html>
